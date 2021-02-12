@@ -17,6 +17,6 @@
     "access": "public"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "mocha __tests__/iota-helper.test.js"
   }
 }

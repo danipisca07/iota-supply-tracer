@@ -1,7 +1,19 @@
 {
   "name": "iota-supply-tracer",
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "libs/*",
+    "services/*"
+  ],
   "devDependencies": {
     "lerna": "^3.22.1"
+  },
+  "dependencies": {
+    "chai": "^4.3.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^8.3.0",
+    "sinon": "^9.2.4",
+    "sinon-chai": "^3.5.0"
   }
 }

@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@iota-supply-tracer/iota-helper": "^0.0.0",
-    "@iota/core": "^1.0.0-beta.30"
+    "@iota/converter": "^1.0.0-beta.30",
+    "@iota/core": "^1.0.0-beta.30",
+    "@iota/extract-json": "^1.0.0-beta.30"
   }
 }

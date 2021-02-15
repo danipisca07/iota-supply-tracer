@@ -17,4 +17,12 @@ describe('@iota-supply-tracer/iota-helper', () => {
             expect(seed1).to.be.not.equal(seed2);
         })
     })
+    describe('readTransaction', () => {
+        it('should read transaction', async () => {
+            const hash = 'YCFMHFNIGGDLSDYDVGLXM9V9VUHNRRHNXNLVHUFBLRYDITZAGSCNDSTJAFYBQCBLSMWPRFEVKSRJQV999';
+            let transaction = await iotaHelper.readTransaction(hash);
+            expect(transaction).to.be.an('object');
+            expect(transaction.message.message).to.be.equal('Hello world from danipisca');
+        })
+    })
 });

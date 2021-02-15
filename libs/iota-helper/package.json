@@ -18,5 +18,9 @@
   },
   "scripts": {
     "test": "mocha __tests__/iota-helper.test.js"
+  },
+  "dependencies": {
+    "@iota/core": "^1.0.0-beta.30",
+    "@iota/extract-json": "^1.0.0-beta.30"
   }
 }

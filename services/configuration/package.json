@@ -1,0 +1,32 @@
+{
+  "name": "@iota-supply-tracer/configuration",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Daniele Piscaglia <danielepiscaglia@libero.it>",
+  "homepage": "https://github.com/danipisca07/iota-supply-tracer#readme",
+  "license": "ISC",
+  "main": "lib/configuration.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danipisca07/iota-supply-tracer.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/danipisca07/iota-supply-tracer/issues"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
+}

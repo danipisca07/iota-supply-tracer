@@ -11,16 +11,20 @@ const iota = Iota.composeAPI({
 });
 
 const iotaHelper = {
-    generateSeed: () => {
-        var seed = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ9';
-        for (var i = 0; i < 81; i++) {
-            seed += characters.charAt(Math.floor(Math.random() * characters.length));
+    api : iota,
+
+    generate: (count, characters) => {
+        let rnd = '';
+        for (let i = 0; i < count; i++) {
+            rnd += characters.charAt(Math.floor(Math.random() * characters.length));
         }
-        return seed;
+        return rnd;
     },
 
-    api : iota,
+    generateSeed: () => {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ9';
+        return iotaHelper.generate(81, characters);
+    },
 
     checkBalance: async (address) => {
         return new Promise((resolve, reject) => {

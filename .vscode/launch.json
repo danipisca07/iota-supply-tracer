@@ -51,6 +51,22 @@
                 "<node_internals>/**"
             ],
             "type": "pwa-node"
+        },
+        {
+            "args": [
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/packages/producer/__tests__/producer.test.js"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "name": "producer tests",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
         }
     ]
 }

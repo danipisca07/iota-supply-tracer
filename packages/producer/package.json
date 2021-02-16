@@ -18,5 +18,9 @@
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@iota-supply-tracer/iota-client": "^0.0.0",
+    "@iota-supply-tracer/iota-helper": "^0.0.0"
   }
 }

@@ -25,4 +25,11 @@ describe('@iota-supply-tracer/iota-helper', () => {
             expect(transaction.message.message).to.be.equal('Hello world from danipisca');
         })
     })
+    describe('verifyTransaction', () => {
+        it('should return verified', async () => {
+            const hash = 'YCFMHFNIGGDLSDYDVGLXM9V9VUHNRRHNXNLVHUFBLRYDITZAGSCNDSTJAFYBQCBLSMWPRFEVKSRJQV999';
+            let verified = await iotaHelper.verifyTransaction(hash);
+            expect(verified).to.be.true;
+        })
+    })
 });

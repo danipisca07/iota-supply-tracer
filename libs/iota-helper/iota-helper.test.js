@@ -1,7 +1,17 @@
 'use strict';
 
-const { expect } = require('chai');
+const chai = require('chai');
+const expect = chai.expect;
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
+
 const iotaHelper = require('./iota-helper');
+
+const transfers =[{
+    value: 0,
+    address: 'HEQLOWORLDHELLOWORLDHELLOWORLDHELLOWORLDHELLOWORLDHELLOWORLDHELLOWORLDHELLOWOR99DMNFAQLWHD',
+    message: null
+}];
 
 describe('@iota-supply-tracer/iota-helper', () => {
     describe('generateSeed', () => {
@@ -25,11 +35,30 @@ describe('@iota-supply-tracer/iota-helper', () => {
             expect(transaction.message.message).to.be.equal('Hello world from danipisca');
         })
     })
-    describe('verifyTransaction', () => {
-        it('should return verified', async () => {
+    describe('confirmTransaction', () => {
+        it('should return true', async () => {
             const hash = 'YCFMHFNIGGDLSDYDVGLXM9V9VUHNRRHNXNLVHUFBLRYDITZAGSCNDSTJAFYBQCBLSMWPRFEVKSRJQV999';
-            let verified = await iotaHelper.verifyTransaction(hash);
-            expect(verified).to.be.true;
+            let confirmed = await iotaHelper.confirmTransaction(hash);
+            expect(confirmed).to.be.true;
+        })
+        it('should return false', async () => {
+            let trytes = await iotaHelper.api.prepareTransfers(iotaHelper.generateSeed(), transfers);
+            let hash = (await iotaHelper.api.sendTrytes(trytes, 3, 9))[0].hash;
+            let confirmed = await iotaHelper.confirmTransaction(hash);
+            expect(confirmed).to.be.false;
+        })
+    })
+    describe('waitUntilConfirmed', () => {
+        it('should timeout to false before confirmation', async () => {
+            let trytes = await iotaHelper.api.prepareTransfers(iotaHelper.generateSeed(), transfers);
+            let hash = (await iotaHelper.api.sendTrytes(trytes, 3, 9))[0].hash;
+            expect(iotaHelper.waitUntilConfirmed(hash, 50, 5)).to.eventually.be.rejected;
+        })
+        it('should eventually be confirmed', async () => {
+            let trytes = await iotaHelper.api.prepareTransfers(iotaHelper.generateSeed(), transfers);
+            let hash = (await iotaHelper.api.sendTrytes(trytes, 3, 9))[0].hash;
+            let time = await iotaHelper.waitUntilConfirmed(hash);
+            expect(time).to.be.not.null;
         })
     })
 });

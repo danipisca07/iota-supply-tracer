@@ -5,14 +5,7 @@
   "author": "Daniele Piscaglia <danielepiscaglia@libero.it>",
   "homepage": "https://github.com/danipisca07/iota-supply-tracer#readme",
   "license": "ISC",
-  "main": "lib/configuration.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
+  "main": "configuration.js",
   "publishConfig": {
     "access": "public"
   },

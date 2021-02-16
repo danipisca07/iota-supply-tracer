@@ -1,6 +1,6 @@
 'use strict';
 const { expect } = require('chai');
-const IotaClient = require('..');
+const IotaClient = require('./iota-client');
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
 
 describe('@iota-supply-tracer/iota-client', () => {

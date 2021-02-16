@@ -1,7 +1,7 @@
 'use strict';
 
 const { expect } = require('chai');
-const iotaHelper = require('..');
+const iotaHelper = require('./iota-helper');
 
 describe('@iota-supply-tracer/iota-helper', () => {
     describe('generateSeed', () => {

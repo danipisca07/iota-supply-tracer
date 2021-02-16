@@ -1,7 +1,7 @@
 'use strict';
 
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
-const IotaClient = require('@iota-supply-tracer/iota-client');
+const IotaClient = require('@iota-supply-tracer/iota-client/iota-client');
 
 class Producer {
     constructor() {

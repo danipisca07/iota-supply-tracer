@@ -1,6 +1,6 @@
 'use strict';
 
-const Producer = require('..');
+const Producer = require('./producer');
 const { expect } = require('chai');
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
 

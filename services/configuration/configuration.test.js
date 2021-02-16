@@ -1,7 +1,7 @@
 'use strict';
 
 const { expect } = require('chai');
-const Configuration = require('..');
+const Configuration = require('./configuration');
 
 describe('@iota-supply-tracer/configuration', () => {
     it('should return seed', () => {

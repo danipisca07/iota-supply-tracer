@@ -33,4 +33,15 @@ describe('@iota-supply-tracer/supplier', () => {
             expect(transaction.message.confirmed).to.be.false;
         })
     })
+    describe('updateProduct', () => {
+        it('should publish product update', async () => {
+            const supplier = new Supplier();
+            let prod = await supplier.newProduct();
+            let status = { phase: 'delivery', location: 'Italy'};
+            let hash = await supplier.updateProduct(prod, status);
+            let transaction = await iotaHelper.readTransaction(hash);
+            expect(transaction.message.status.phase).to.be.equal('delivery');
+            expect(transaction.message.status.location).to.be.equal('Italy');
+        })
+    })
 });

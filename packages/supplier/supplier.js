@@ -77,6 +77,28 @@ class Supplier {
                 })
         })
     }
+
+    async updateProduct(product, status){
+        return new Promise(async (resolve, reject) => {
+            const payload = {
+                id: product.id,
+                status,
+                certificate: this.certificate,
+                signature: this.authenticator.sign(product.id),
+            }
+            const productClient = new IotaClient(product.seed);
+            const newAddr = await productClient.generateAddress();
+            this.client.newTransaction(newAddr, 0, payload)
+                .then((hash) => {
+                    resolve(hash);
+                })
+                .catch((err) => {
+                    reject(err);
+                })
+        })
+    }
+
+    
 }
 
 module.exports = Supplier;

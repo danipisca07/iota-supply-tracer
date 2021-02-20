@@ -23,4 +23,14 @@ describe('@iota-supply-tracer/producer', () => {
             expect(transaction.message.newOwnerCertificate).to.deep.equal(newOwnerCert);
         })
     })
+    describe('transferProductToEndUser', () => {
+        it('should transfer product to end user', async () => {
+            const producer = new Producer();
+            let prod = await producer.newProduct();
+            let hash = await producer.transferProductToEndUser(prod);
+            let transaction = await iotaHelper.readTransaction(hash);
+            expect(transaction.message.delivered).to.be.true;
+            expect(transaction.message.confirmed).to.be.false;
+        })
+    })
 });

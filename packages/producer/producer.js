@@ -43,12 +43,38 @@ class Producer {
                 }
                 const productClient = new IotaClient(product.seed);
                 const newAddr = await productClient.generateAddress();
-                const hash = productClient.newTransaction(newAddr, 0, payload);
-                resolve(hash);
+                const hash = this.client.newTransaction(newAddr, 0, payload)
+                    .then((hash) => {
+                        resolve(hash);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    })
             }   
             catch(err){
                 reject(err);
             }
+        })
+    }
+
+    async transferProductToEndUser(product){
+        return new Promise(async (resolve, reject) => {
+            const payload = {
+                id: product.id,
+                delivered: true,
+                confirmed: false,
+                certificate: this.certificate,
+                signature: this.authenticator.sign(product.id),
+            }
+            const productClient = new IotaClient(product.seed);
+            const newAddr = await productClient.generateAddress();
+            this.client.newTransaction(newAddr, 0, payload)
+                .then((hash) => {
+                    resolve(hash);
+                })
+                .catch((err) => {
+                    reject(err);
+                })
         })
     }
 }

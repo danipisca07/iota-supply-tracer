@@ -57,10 +57,10 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/packages/producer/producer.test.js"
+                "${workspaceFolder}/packages/supplier/supplier.test.js"
             ],
             "internalConsoleOptions": "openOnSessionStart",
-            "name": "producer tests",
+            "name": "supplier tests",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "request": "launch",
             "skipFiles": [

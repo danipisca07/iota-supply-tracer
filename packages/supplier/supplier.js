@@ -1,10 +1,10 @@
 'use strict';
 
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
-const IotaClient = require('@iota-supply-tracer/iota-client/iota-client');
+const IotaClient = require('@iota-supply-tracer/iota-client');
 const Configuration = require('@iota-supply-tracer/configuration');
 
-class Producer {
+class Supplier {
     constructor() {
         this.client = new IotaClient()
         this.certificate = Configuration.certificate;
@@ -79,6 +79,6 @@ class Producer {
     }
 }
 
-module.exports = Producer;
+module.exports = Supplier;
 
 

@@ -1,11 +1,11 @@
 {
-  "name": "@iota-supply-tracer/producer",
+  "name": "@iota-supply-tracer/supplier",
   "version": "0.0.0",
   "description": "> TODO: description",
   "author": "Daniele Piscaglia <danielepiscaglia@libero.it>",
   "homepage": "",
   "license": "ISC",
-  "main": "producer.js",
+  "main": "supplier.js",
   "publishConfig": {
     "access": "public"
   },

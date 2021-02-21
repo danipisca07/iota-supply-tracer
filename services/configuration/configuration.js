@@ -2,6 +2,9 @@
 require('dotenv').config()
 
 const Configuration = {
+
+    provider: 'http://api.lb-0.testnet.chrysalis2.com',
+
     seed: process.env.SEED,
 
     certificate: { //TODO: implement certificates

@@ -1,19 +1,19 @@
 {
-  "name": "@iota-supply-tracer/iota-helper",
-  "version": "0.0.0",
-  "description": "> TODO: description",
-  "author": "Daniele Piscaglia <danielepiscaglia@libero.it>",
-  "homepage": "",
-  "license": "ISC",
-  "main": "iota-helper.js",
-  "publishConfig": {
-    "access": "public"
-  },
-  "scripts": {
-    "test": "mocha __tests__/iota-helper.test.js"
-  },
-  "dependencies": {
-    "@iota/core": "^1.0.0-beta.30",
-    "@iota/extract-json": "^1.0.0-beta.30"
-  }
+	"name": "@iota-supply-tracer/iota-helper",
+	"version": "0.0.0",
+	"description": "",
+	"author": "Daniele Piscaglia <danielepiscaglia@libero.it>",
+	"homepage": "",
+	"license": "ISC",
+	"main": "iota-helper.js",
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@iota-supply-tracer/configuration": "^0.0.0",
+		"@iota/iota.js": "github:iotaledger/iota.js#chrysalis"
+	},
+	"devDependencies": {
+		"mocha": "^8.3.0"
+	}
 }

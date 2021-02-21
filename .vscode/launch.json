@@ -5,6 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch demo",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "demo"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
             "args": [
                 "--timeout",
                 "999999",
@@ -83,6 +96,7 @@
                 "<node_internals>/**"
             ],
             "type": "pwa-node"
-        }
+        },
+
     ]
 }

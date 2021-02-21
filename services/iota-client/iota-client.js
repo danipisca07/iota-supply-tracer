@@ -17,7 +17,7 @@ class IotaClient {
 
     async generateAddress(securityLevel = 2) {
         return new Promise((resolve, reject) => {
-            iotaHelper.api.getNewAddress(this._seed, { index: 0, securityLevel: securityLevel, total: 1 })
+            iotaHelper.api.getNewAddress(this._seed, { index: 0, securityLevel: securityLevel})
                 .then(address => {
                     resolve(address[0]);
                 })

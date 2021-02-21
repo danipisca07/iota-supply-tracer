@@ -1,6 +1,9 @@
 {
   "name": "iota-supply-tracer",
   "private": true,
+  "scripts": {
+    "demo": "node demo.js"
+  },
   "workspaces": [
     "packages/*",
     "libs/*",

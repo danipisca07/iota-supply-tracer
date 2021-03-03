@@ -13,7 +13,7 @@ const transfers =[{
     message: null
 }];
 
-const messageHash = '608e5ffb0603795674dbffc77546f11775bec5dead0d4b8f3ec918e0c13d5d6f';
+const messageHash = '6185d1e8d86a9a3ebf135ee192edc3e83e6e6440f3bca5d09fc59a39f607b03d';
 
 describe('@iota-supply-tracer/iota-helper', () => {
     describe('generateSeed', () => {

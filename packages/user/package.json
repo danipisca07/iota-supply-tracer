@@ -15,5 +15,8 @@
   "dependencies": {
     "@iota-supply-tracer/iota-client": "^0.0.0",
     "@iota-supply-tracer/iota-helper": "^0.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^8.3.0"
   }
 }

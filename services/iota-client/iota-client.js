@@ -1,23 +1,26 @@
 'use strict';
 
 const Configuration = require('@iota-supply-tracer/configuration')
-const Converter = require('@iota/converter');
-const iotaHelper = require('@iota-supply-tracer/iota-helper')
+const iotaHelper = require('@iota-supply-tracer/iota-helper');
+const { Ed25519Seed, Converter } = require('@iota/iota.js');
+const iotajs = require('@iota/iota.js');
 
 class IotaClient {
     constructor(seed) {
         if (seed == null)
             seed = Configuration.seed;
-        this._seed = seed;
+        //this._seed = seed;
+        this._seed = new Ed25519Seed(Converter.utf8ToBytes(seed));
     }
 
     getSeed() {
         return this._seed;
     }
 
-    async generateAddress(securityLevel = 2) {
+    async generateAddress() {
         return new Promise((resolve, reject) => {
-            iotaHelper.api.getNewAddress(this._seed, { index: 0, securityLevel: securityLevel})
+            //iotajs.getUnspentAddress(this._seed)
+            iotajs.getUnspentAddress(iotaHelper.api, this._seed)
                 .then(address => {
                     resolve(address[0]);
                 })

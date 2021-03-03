@@ -41,8 +41,6 @@ describe('@iota-supply-tracer/iota-client', () => {
             expect(hash).to.be.not.null;
             let transaction = await iotaHelper.readTransaction(hash);
             expect(transaction.message.data).to.be.equal("payload test");
-            let verified = await iotaHelper.verifyTransaction(hash);
-            expect(verified).to.be.false;
         })
     })
 });

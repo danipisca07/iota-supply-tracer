@@ -4,6 +4,14 @@ const Supplier = require('./supplier');
 const { expect } = require('chai');
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
 describe('@iota-supply-tracer/supplier', () => {
+    describe('generateNewKey', () => {
+        it('should generate new keypair', async () => {
+            const supplier = new Supplier();
+            await supplier.newKeyPromise;
+            expect(supplier._privateKey).to.be.not.null;
+            expect(supplier._publicKey).to.be.not.null;
+        })
+    }),
     describe('newProduct', () => {
         it('should generate new product', async () => {
             const supplier = new Supplier();

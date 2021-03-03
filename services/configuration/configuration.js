@@ -3,18 +3,8 @@ require('dotenv').config()
 
 const Configuration = {
     seed: process.env.SEED,
+    name: "todo",
 
-    certificate: { //TODO: implement certificates
-        subject: "not implemented",
-        issuer: "not implemented",
-        pubkey: "not implemented"
-    },
-
-    authenticator: { //TODO: implement encryptor
-        sign: (message) => {
-            return message;
-        }
-    }
 
 }
 

@@ -3,12 +3,13 @@
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
 const IotaClient = require('@iota-supply-tracer/iota-client');
 const Configuration = require('@iota-supply-tracer/configuration');
+const MessageSigner = require('@iota-supply-tracer/message-signer');
 
 class Supplier {
     constructor() {
-        this.client = new IotaClient()
-        this.certificate = Configuration.certificate;
-        this.authenticator = Configuration.authenticator;
+        this.client = new IotaClient();
+        //TODO: read keypair from config (if any)
+        this.generateNewKey();
     }
 
     async newProduct() {
@@ -20,10 +21,10 @@ class Supplier {
             product.id = await this.client.generateAddress(); //TODO: receive Id as param?
             const payload = {
                 id: product.id,
-                certificate: this.certificate,
-                signature: this.authenticator.sign(product.id),
             };
-            this.client.newTransaction(product.address, 0, payload)
+            await this.newKeyPromise;
+            payload.signature = MessageSigner.sign(JSON.stringify(payload), this._privateKey);
+            product.client.newTransaction(product.address, 0, payload)
                 .then((hash) => {
                     product.transactionHash = hash;
                     resolve(product)
@@ -38,12 +39,12 @@ class Supplier {
                 const payload = {
                     id: product.id,
                     newOwnerCertificate,
-                    certificate: this.certificate,
-                    signature: this.authenticator.sign(product.id),
                 }
+                await this.newKeyPromise;
+                payload.signature = MessageSigner.sign(JSON.stringify(payload), this._privateKey);
                 const productClient = new IotaClient(product.seed);
                 const newAddr = await productClient.generateAddress();
-                const hash = this.client.newTransaction(newAddr, 0, payload)
+                productClient.newTransaction(newAddr, 0, payload)
                     .then((hash) => {
                         resolve(hash);
                     })
@@ -63,12 +64,12 @@ class Supplier {
                 id: product.id,
                 delivered: true,
                 confirmed: false,
-                certificate: this.certificate,
-                signature: this.authenticator.sign(product.id),
             }
+            await this.newKeyPromise;
+            payload.signature = MessageSigner.sign(JSON.stringify(payload), this._privateKey);
             const productClient = new IotaClient(product.seed);
             const newAddr = await productClient.generateAddress();
-            this.client.newTransaction(newAddr, 0, payload)
+            productClient.newTransaction(newAddr, 0, payload)
                 .then((hash) => {
                     resolve(hash);
                 })
@@ -82,13 +83,13 @@ class Supplier {
         return new Promise(async (resolve, reject) => {
             const payload = {
                 id: product.id,
-                status,
-                certificate: this.certificate,
-                signature: this.authenticator.sign(product.id),
+                status
             }
+            await this.newKeyPromise;
+            payload.signature = MessageSigner.sign(JSON.stringify(payload), this._privateKey);
             const productClient = new IotaClient(product.seed);
             const newAddr = await productClient.generateAddress();
-            this.client.newTransaction(newAddr, 0, payload)
+            productClient.newTransaction(newAddr, 0, payload)
                 .then((hash) => {
                     resolve(hash);
                 })
@@ -96,6 +97,28 @@ class Supplier {
                     reject(err);
                 })
         })
+    }
+
+    async generateNewKey(){
+        this.newKeyPromise = new Promise(async (resolve, reject) => {
+            const keypair = await MessageSigner.generateKeyPair();
+            this._privateKey = keypair.privateKey;
+            this._publicKey = keypair.publicKey;
+            const payload = {
+                name: Configuration.name,
+                pubKey: this._publicKey
+            }
+            const newAddr = await this.client.generateAddress();
+            this.client.newTransaction(newAddr, 0, payload)
+                .then((hash) => {
+                    resolve(hash);
+                    //TODO: save private key on configuration
+                })
+                .catch((err) => {
+                    reject(err);
+                })
+        });
+        return this.newKeyPromise;
     }
 
     

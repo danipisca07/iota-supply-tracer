@@ -85,31 +85,39 @@ RwIDAQAB
 `;
 
 describe('message-signer', () => {
-    it('should sign then verify message with right key', () => {
-        const msg = "Test message";
-        
-        const signature = MessageSigner.sign(msg, privateKey);
-
-        const ok = MessageSigner.verify(msg, signature, publicKey);
-        expect(ok).to.be.true;
+    describe('generateKeyPair', () => {
+        it('should generate new keypair', async () => {
+            const keypair = await MessageSigner.generateKeyPair();
+            expect(keypair.privateKey).to.be.not.null;
+            expect(keypair.publicKey).to.be.not.null;
+        })
     })
-
-    it('should sign then not verify message with wrong priv key', () => {
-        const msg = "Test message";
-        
-        const signature = MessageSigner.sign(msg, wrongPrivateKey);
-
-        const ok = MessageSigner.verify(msg, signature, publicKey);
-        expect(ok).to.be.false;
+    describe('Sign and Verify', () => {
+        it('should verify with right key', () => {
+            const msg = "Test message";
+            
+            const signature = MessageSigner.sign(msg, privateKey);
+    
+            const ok = MessageSigner.verify(msg, signature, publicKey);
+            expect(ok).to.be.true;
+        })
+    
+        it('should NOT verify with wrong priv key', () => {
+            const msg = "Test message";
+            
+            const signature = MessageSigner.sign(msg, wrongPrivateKey);
+    
+            const ok = MessageSigner.verify(msg, signature, publicKey);
+            expect(ok).to.be.false;
+        })
+    
+        it('should NOT verify with wrong pub key', () => {
+            const msg = "Test message";
+            
+            const signature = MessageSigner.sign(msg, privateKey);
+    
+            const ok = MessageSigner.verify(msg, signature, wrongPublicKey);
+            expect(ok).to.be.false;
+        })
     })
-
-    it('should sign then not verify message with wrong pub key', () => {
-        const msg = "Test message";
-        
-        const signature = MessageSigner.sign(msg, privateKey);
-
-        const ok = MessageSigner.verify(msg, signature, wrongPublicKey);
-        expect(ok).to.be.false;
-    })
-
 });

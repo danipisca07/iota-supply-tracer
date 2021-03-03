@@ -38,6 +38,22 @@
                 "--timeout",
                 "999999",
                 "--colors",
+                "${workspaceFolder}/libs/message-signer/message-signer.test.js"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "name": "message-signer tests",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
+            "args": [
+                "--timeout",
+                "999999",
+                "--colors",
                 "${workspaceFolder}/libs/iota-helper/iota-helper.test.js"
             ],
             "internalConsoleOptions": "openOnSessionStart",

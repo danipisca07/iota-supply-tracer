@@ -1,0 +1,19 @@
+{
+  "name": "@iota-supply-tracer/message-signer",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Daniele Piscaglia <danielepiscaglia@libero.it>",
+  "homepage": "https://github.com/danipisca07/iota-supply-tracer#readme",
+  "license": "ISC",
+  "main": "message-signer.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danipisca07/iota-supply-tracer.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/danipisca07/iota-supply-tracer/issues"
+  }
+}

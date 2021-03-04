@@ -6,12 +6,14 @@ async function main() {
 
     //Product creation
     const supplier = new Supplier(iotaHelper.generateSeed());
+    await supplier.newKeyPromise;
     const product = await supplier.newProduct();
     await iotaHelper.waitUntilConfirmed(product.transactionHash);
     console.log(`New product with id: ${product.id} registered [${product.transactionHash}]`);
 
     //Transfer to intermediary
     const intermediary = new Supplier();
+    await intermediary.newKeyPromise;
     const intermediaryCert = intermediary.certificate;
     let transactionHash = await supplier.transferProduct(product, intermediaryCert);
     await iotaHelper.waitUntilConfirmed(transactionHash);

@@ -1,5 +1,12 @@
 'use strict';
 
+const OPERATIONS = Object.freeze({
+    CREATION: 'creation',
+    TRANSFER: 'transfer',
+    TRANSFER_TO_END_USER: 'deliver',
+    UPDATE: 'update'
+});
+
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
 const IotaClient = require('@iota-supply-tracer/iota-client');
 const Configuration = require('@iota-supply-tracer/configuration');
@@ -17,15 +24,15 @@ class Supplier {
             let product = {};
             product.seed = iotaHelper.generateSeed();
             product.client = new IotaClient(product.seed);
-            product.address = await product.client.generateAddress();
-            product.id = await this.client.generateAddress(); //TODO: receive Id as param?
+            product.id = await product.client.generateAddress();
             const payload = {
                 id: product.id,
+                op: OPERATIONS.CREATION,
                 certificate: this.certificate,
             };
             await this.newKeyPromise;
             MessageSigner.signPayload(payload, this._privateKey);
-            product.client.newTransaction(product.address, 0, payload)
+            product.client.newTransaction(product.id, 0, payload)
                 .then((hash) => {
                     product.transactionHash = hash;
                     resolve(product)
@@ -39,6 +46,7 @@ class Supplier {
             try {
                 const payload = {
                     id: product.id,
+                    op: OPERATIONS.TRANSFER,
                     newOwnerCertificate,
                     certificate: this.certificate,
                 }
@@ -64,6 +72,7 @@ class Supplier {
         return new Promise(async (resolve, reject) => {
             const payload = {
                 id: product.id,
+                op: OPERATIONS.TRANSFER_TO_END_USER,
                 delivered: true,
                 confirmed: false,
                 certificate: this.certificate,
@@ -86,6 +95,7 @@ class Supplier {
         return new Promise(async (resolve, reject) => {
             const payload = {
                 id: product.id,
+                op: OPERATIONS.UPDATE,
                 status,
                 certificate: this.certificate,
             }

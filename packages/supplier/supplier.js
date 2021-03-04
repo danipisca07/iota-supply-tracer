@@ -21,9 +21,10 @@ class Supplier {
             product.id = await this.client.generateAddress(); //TODO: receive Id as param?
             const payload = {
                 id: product.id,
+                certificate: this.certificate,
             };
             await this.newKeyPromise;
-            payload.signature = MessageSigner.sign(JSON.stringify(payload), this._privateKey);
+            MessageSigner.signPayload(payload, this._privateKey);
             product.client.newTransaction(product.address, 0, payload)
                 .then((hash) => {
                     product.transactionHash = hash;
@@ -39,9 +40,10 @@ class Supplier {
                 const payload = {
                     id: product.id,
                     newOwnerCertificate,
+                    certificate: this.certificate,
                 }
                 await this.newKeyPromise;
-                payload.signature = MessageSigner.sign(JSON.stringify(payload), this._privateKey);
+                MessageSigner.signPayload(payload, this._privateKey);
                 const productClient = new IotaClient(product.seed);
                 const newAddr = await productClient.generateAddress();
                 productClient.newTransaction(newAddr, 0, payload)
@@ -64,9 +66,10 @@ class Supplier {
                 id: product.id,
                 delivered: true,
                 confirmed: false,
+                certificate: this.certificate,
             }
             await this.newKeyPromise;
-            payload.signature = MessageSigner.sign(JSON.stringify(payload), this._privateKey);
+            MessageSigner.signPayload(payload, this._privateKey);
             const productClient = new IotaClient(product.seed);
             const newAddr = await productClient.generateAddress();
             productClient.newTransaction(newAddr, 0, payload)
@@ -83,10 +86,11 @@ class Supplier {
         return new Promise(async (resolve, reject) => {
             const payload = {
                 id: product.id,
-                status
+                status,
+                certificate: this.certificate,
             }
             await this.newKeyPromise;
-            payload.signature = MessageSigner.sign(JSON.stringify(payload), this._privateKey);
+            MessageSigner.signPayload(payload, this._privateKey);
             const productClient = new IotaClient(product.seed);
             const newAddr = await productClient.generateAddress();
             productClient.newTransaction(newAddr, 0, payload)
@@ -104,12 +108,13 @@ class Supplier {
             const keypair = await MessageSigner.generateKeyPair();
             this._privateKey = keypair.privateKey;
             this._publicKey = keypair.publicKey;
-            const payload = {
-                name: Configuration.name,
-                pubKey: this._publicKey
-            }
             const newAddr = await this.client.generateAddress();
-            this.client.newTransaction(newAddr, 0, payload)
+            this.certificate = {
+                name: Configuration.name,
+                entity: this.certificate != null ? this.certificate.entity : newAddr,
+                publicKey : keypair.publicKey,
+            }            
+            this.client.newTransaction(newAddr, 0, { certificate: this.certificate })
                 .then((hash) => {
                     resolve(hash);
                     //TODO: save private key on configuration

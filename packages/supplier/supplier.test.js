@@ -4,17 +4,16 @@ const Supplier = require('./supplier');
 const { expect } = require('chai');
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
 describe('@iota-supply-tracer/supplier', () => {
+    const supplier = new Supplier();
     describe('generateNewKey', () => {
         it('should generate new keypair', async () => {
-            const supplier = new Supplier();
             await supplier.newKeyPromise;
             expect(supplier._privateKey).to.be.not.null;
-            expect(supplier._publicKey).to.be.not.null;
+            expect(supplier.certificate.publicKey).to.be.not.null;
         })
     }),
     describe('newProduct', () => {
         it('should generate new product', async () => {
-            const supplier = new Supplier();
             let prod = await supplier.newProduct();
             expect(prod).to.be.not.null;
             let transaction = await iotaHelper.readTransaction(prod.transactionHash);
@@ -23,9 +22,8 @@ describe('@iota-supply-tracer/supplier', () => {
     })
     describe('transferProduct', () => {
         it('should transfer product', async () => {
-            const supplier = new Supplier();
             let prod = await supplier.newProduct();
-            const newOwnerCert = {subject: "whatever"};
+            const newOwnerCert = {entity: "whatever", publicKey: "..."};
             let hash = await supplier.transferProduct(prod, newOwnerCert);
             let transaction = await iotaHelper.readTransaction(hash);
             expect(transaction.message.newOwnerCertificate).to.deep.equal(newOwnerCert);
@@ -33,7 +31,6 @@ describe('@iota-supply-tracer/supplier', () => {
     })
     describe('transferProductToEndUser', () => {
         it('should transfer product to end user', async () => {
-            const supplier = new Supplier();
             let prod = await supplier.newProduct();
             let hash = await supplier.transferProductToEndUser(prod);
             let transaction = await iotaHelper.readTransaction(hash);
@@ -43,7 +40,6 @@ describe('@iota-supply-tracer/supplier', () => {
     })
     describe('updateProduct', () => {
         it('should publish product update', async () => {
-            const supplier = new Supplier();
             let prod = await supplier.newProduct();
             let status = { phase: 'delivery', location: 'Italy'};
             let hash = await supplier.updateProduct(prod, status);

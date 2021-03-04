@@ -1,5 +1,6 @@
 'use strict';
 const crypto = require('crypto');
+const lodash = require('lodash');
 
 const MessageSigner = {
     /**
@@ -33,6 +34,17 @@ const MessageSigner = {
                 else resolve({publicKey, privateKey});
             })
         })
+    },
+
+    signPayload: (payload, privkey) => {
+        const signature = MessageSigner.sign(JSON.stringify(payload), privkey);
+        payload.signature = signature;
+    },
+
+    verifyPayload: (payload) => {
+        const body = lodash.cloneDeep(payload);
+        delete body.signature;
+        return MessageSigner.verify(JSON.stringify(body), payload.signature, payload.certificate.publicKey);
     }
 };
 

@@ -120,4 +120,20 @@ describe('message-signer', () => {
             expect(ok).to.be.false;
         })
     })
+    describe('Sign and Verify payload', () => {
+        it('should verify with right key', () => {
+            const msg = "Test message";
+            const certificate = {
+                publicKey : publicKey
+            }
+            const payload = {
+                msg,
+                certificate
+            }
+            MessageSigner.signPayload(payload, privateKey);
+            
+            const ok = MessageSigner.verifyPayload(payload);
+            expect(ok).to.be.true;
+        })
+    })
 });

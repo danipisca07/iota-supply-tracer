@@ -7,6 +7,29 @@ class User {
         
     }
 
+    async getProductData(product){
+        return new Promise(async (resolve, reject) => {
+            try {
+                const client = new IotaClient(product.seed);
+                const chain = await client.getSupplyChain();
+                resolve(chain);
+            } catch(e) {
+                reject(e);
+            }
+        });
+    }
+
+    async verifyProduct(product){
+        return new Promise(async (resolve, reject) => {
+            try {
+                //TODO
+                resolve(true);
+            } catch(e) {
+                reject(e);
+            }
+        });
+    }
+
     async confirmProduct(product) {
         return new Promise(async (resolve, reject) => {
             const client = new IotaClient(product.seed);

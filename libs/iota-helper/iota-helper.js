@@ -38,11 +38,15 @@ const iotaHelper = {
         })
     },
 
+    extractMessageFromBundle: (bundle) => {
+        return JSON.parse(Extract.extractJson(bundle))
+    },
+
     readTransaction: async (hash) => {
         return new Promise((resolve, reject) => {
             iotaHelper.api.getBundle(hash)
                 .then(bundle => {
-                    const message = JSON.parse(Extract.extractJson(bundle));
+                    const message = iotaHelper.extractMessageFromBundle(bundle);
                     resolve({
                         address: bundle[0].address,
                         timestamp: bundle[0].timestamp,
@@ -53,6 +57,16 @@ const iotaHelper = {
                 .catch(err => {
                     reject(err);
                 });
+        })
+    },
+
+    readTransactions: async (hashes) => {
+        return new Promise((resolve, reject) => {
+            Promise.all(hashes.map(hash => {
+                return iotaHelper.readTransaction(hash);
+            }))
+            .then(results => resolve(results))
+            .catch(err => reject(err));
         })
     },
 

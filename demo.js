@@ -26,9 +26,16 @@ async function main() {
 
     //Product confirmation
     const user = new User();
-    transactionHash = await user.confirmProduct(product);
-    await iotaHelper.waitUntilConfirmed(transactionHash);
-    console.log(`Product with id: ${product.id} is confirmed by end user [${transactionHash}]`);
+    const data = await user.getProductData(product);
+    const ok = await user.verifyProduct(product);
+    if(ok){
+        transactionHash = await user.confirmProduct(product);
+        await iotaHelper.waitUntilConfirmed(transactionHash);
+        console.log(`Product with id: ${product.id} is confirmed by end user [${transactionHash}]`);
+    } else {
+        console.log(`Product with id: ${product.id} is NOT verified!!`);
+    }
+    
 
 }
 

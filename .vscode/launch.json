@@ -113,6 +113,22 @@
             ],
             "type": "pwa-node"
         },
+        {
+            "args": [
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/test.js"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "name": "Global tests",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
 
     ]
 }

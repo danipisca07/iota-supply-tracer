@@ -14,44 +14,67 @@ const MessageSigner = require('@iota-supply-tracer/message-signer');
 
 class Supplier {
     constructor() {
-        this.client = new IotaClient();
-        //TODO: read keypair from config (if any)
-        this.generateNewKey();
+        
+    }
+
+    async init(){
+        return new Promise(async (resolve,reject) => {
+            try {
+                this.config = await Configuration.loadConfiguration();
+                if(this.config.seed === null)
+                    this.config.seed = iotaHelper.generateSeed();
+                this.client = new IotaClient(this.config.seed);
+                if(this.config.privateKey === null )
+                    await this.generateNewKey();
+            } catch(err) {
+                reject(err);
+            }            
+            resolve();
+        })
     }
 
     async newProduct() {
         return new Promise(async (resolve, reject) => {
-            let product = {};
-            product.seed = iotaHelper.generateSeed();
-            product.client = new IotaClient(product.seed);
-            product.id = await product.client.generateAddress();
-            const payload = {
-                id: product.id,
-                op: OPERATIONS.CREATION,
-                certificate: this.certificate,
-            };
-            await this.newKeyPromise;
-            MessageSigner.signPayload(payload, this._privateKey);
-            product.client.newTransaction(product.id, 0, payload)
-                .then((hash) => {
-                    product.transactionHash = hash;
-                    resolve(product)
-                })
-                .catch((err) => reject(err))
+            if(!this.config)
+                reject(new Error("Should call init first!"));
+            try {
+                let product = {};
+                product.seed = iotaHelper.generateSeed();
+                product.client = new IotaClient(product.seed);
+                product.id = await product.client.generateAddress();
+                const payload = {
+                    id: product.id,
+                    op: OPERATIONS.CREATION,
+                    certificate: this.config.certificate,
+                };
+                MessageSigner.signPayload(payload, this.config.privateKey);
+                product.transactionHash = await product.client.newTransaction(product.id, 0, payload);
+                resolve(product);
+            }
+            catch(err){
+                reject(err);            
+            }
         })
     }
 
+    /**
+     * 
+     * @param {*} product 
+     * @param {*} newOwnerCertificate Certificate object
+     * @returns 
+     */
     async transferProduct(product, newOwnerCertificate){
         return new Promise(async (resolve, reject) => {
+            if(!this.config)
+                reject(new Error("Should call init first!"));
             try {
                 const payload = {
                     id: product.id,
                     op: OPERATIONS.TRANSFER,
                     newOwnerCertificate,
-                    certificate: this.certificate,
+                    certificate: this.config.ertificate,
                 }
-                await this.newKeyPromise;
-                MessageSigner.signPayload(payload, this._privateKey);
+                MessageSigner.signPayload(payload, this.config.privateKey);
                 const productClient = new IotaClient(product.seed);
                 const newAddr = await productClient.generateAddress();
                 productClient.newTransaction(newAddr, 0, payload)
@@ -70,15 +93,16 @@ class Supplier {
 
     async transferProductToEndUser(product){
         return new Promise(async (resolve, reject) => {
+            if(!this.config)
+                reject(new Error("Should call init first!"));
             const payload = {
                 id: product.id,
                 op: OPERATIONS.TRANSFER_TO_END_USER,
                 delivered: true,
                 confirmed: false,
-                certificate: this.certificate,
+                certificate: this.config.certificate,
             }
-            await this.newKeyPromise;
-            MessageSigner.signPayload(payload, this._privateKey);
+            MessageSigner.signPayload(payload, this.config.privateKey);
             const productClient = new IotaClient(product.seed);
             const newAddr = await productClient.generateAddress();
             productClient.newTransaction(newAddr, 0, payload)
@@ -93,14 +117,15 @@ class Supplier {
 
     async updateProduct(product, status){
         return new Promise(async (resolve, reject) => {
+            if(!this.config)
+                reject(new Error("Should call init first!"));
             const payload = {
                 id: product.id,
                 op: OPERATIONS.UPDATE,
                 status,
-                certificate: this.certificate,
+                certificate: this.config.certificate,
             }
-            await this.newKeyPromise;
-            MessageSigner.signPayload(payload, this._privateKey);
+            MessageSigner.signPayload(payload, this.config.privateKey);
             const productClient = new IotaClient(product.seed);
             const newAddr = await productClient.generateAddress();
             productClient.newTransaction(newAddr, 0, payload)
@@ -114,26 +139,26 @@ class Supplier {
     }
 
     async generateNewKey(){
-        this.newKeyPromise = new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const keypair = await MessageSigner.generateKeyPair();
-            this._privateKey = keypair.privateKey;
-            this._publicKey = keypair.publicKey;
             const newAddr = await this.client.generateAddress();
-            this.certificate = {
-                name: Configuration.name,
-                entity: this.certificate != null ? this.certificate.entity : newAddr,
+            const certificate = {
+                name: this.config.name,
+                website: this.config.website,
+                entity: this.config.certificate?.entity != undefined ? this.config.certificate.entity : newAddr,
                 publicKey : keypair.publicKey,
             }            
-            this.client.newTransaction(newAddr, 0, { certificate: this.certificate })
+            this.client.newTransaction(newAddr, 0, { certificate })
                 .then((hash) => {
-                    resolve(hash);
+                    this.config.privateKey = keypair.privateKey;
+                    this.config.certificate = certificate;
                     //TODO: save private key on configuration
+                    resolve(hash);
                 })
                 .catch((err) => {
                     reject(err);
                 })
         });
-        return this.newKeyPromise;
     }
 
     

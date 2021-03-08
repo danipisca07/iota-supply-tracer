@@ -1,12 +1,7 @@
 'use strict';
 
-const OPERATIONS = Object.freeze({
-    CREATION: 'creation',
-    TRANSFER: 'transfer',
-    TRANSFER_TO_END_USER: 'deliver',
-    UPDATE: 'update'
-});
 
+const { Operations } = require('@iota-supply-tracer/constants');
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
 const IotaClient = require('@iota-supply-tracer/iota-client');
 const Configuration = require('@iota-supply-tracer/configuration');
@@ -44,8 +39,8 @@ class Supplier {
                 product.id = await product.client.generateAddress();
                 const payload = {
                     id: product.id,
-                    op: OPERATIONS.CREATION,
-                    certificate: this.config.certificate,
+                    op: Operations.CREATION,
+                    entity: this.config.certificate.entity,
                 };
                 MessageSigner.signPayload(payload, this.config.privateKey);
                 product.transactionHash = await product.client.newTransaction(product.id, 0, payload);
@@ -63,16 +58,16 @@ class Supplier {
      * @param {*} newOwnerCertificate Certificate object
      * @returns 
      */
-    async transferProduct(product, newOwnerCertificate){
+    async transferProduct(product, newEntity){
         return new Promise(async (resolve, reject) => {
             if(!this.config)
                 reject(new Error("Should call init first!"));
             try {
                 const payload = {
                     id: product.id,
-                    op: OPERATIONS.TRANSFER,
-                    newOwnerCertificate,
-                    certificate: this.config.ertificate,
+                    op: Operations.TRANSFER,
+                    newEntity: newEntity,
+                    entity: this.config.certificate.entity,
                 }
                 MessageSigner.signPayload(payload, this.config.privateKey);
                 const productClient = new IotaClient(product.seed);
@@ -97,10 +92,10 @@ class Supplier {
                 reject(new Error("Should call init first!"));
             const payload = {
                 id: product.id,
-                op: OPERATIONS.TRANSFER_TO_END_USER,
+                op: Operations.TRANSFER_TO_END_USER,
                 delivered: true,
                 confirmed: false,
-                certificate: this.config.certificate,
+                entity: this.config.certificate.entity,
             }
             MessageSigner.signPayload(payload, this.config.privateKey);
             const productClient = new IotaClient(product.seed);
@@ -121,9 +116,9 @@ class Supplier {
                 reject(new Error("Should call init first!"));
             const payload = {
                 id: product.id,
-                op: OPERATIONS.UPDATE,
+                op: Operations.UPDATE,
                 status,
-                certificate: this.config.certificate,
+                entity: this.config.certificate.entity,
             }
             MessageSigner.signPayload(payload, this.config.privateKey);
             const productClient = new IotaClient(product.seed);

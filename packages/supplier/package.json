@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@iota-supply-tracer/configuration": "^0.0.0",
+    "@iota-supply-tracer/constants": "^0.0.0",
     "@iota-supply-tracer/iota-client": "^0.0.0",
     "@iota-supply-tracer/iota-helper": "^0.0.0",
     "@iota-supply-tracer/message-signer": "^0.0.0"

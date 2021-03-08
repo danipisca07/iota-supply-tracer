@@ -7,9 +7,11 @@ const sinonChai = require('sinon-chai');
 chai.use(require('chai-as-promised'));
 chai.use(sinonChai);
 
+const { Operations } = require('./libs/constants/constants');
 const Configuration = require('./services/configuration/configuration');
 const Supplier = require('./packages/supplier/supplier');
 const User = require('./packages/user/user');
+const iotaHelper = require('./services/iota-client/node_modules/@iota-supply-tracer/iota-helper/iota-helper');
 const supplierConfig = {
     name: "Producer",
     website: "producer.it",
@@ -121,6 +123,8 @@ describe('@iota-supply-tracer', () => {
             const supplier = new Supplier();
             await supplier.init();
             product = await supplier.newProduct();
+            let data = await iotaHelper.readTransaction(product.transactionHash);
+            expect(data.message.op).to.be.equal(Operations.CREATION);
             //await iotaHelper.waitUntilConfirmed(product.transactionHash);
         })
         it('should transfer product', async () => {
@@ -128,7 +132,9 @@ describe('@iota-supply-tracer', () => {
             configStub = sinon.stub(Configuration, 'loadConfiguration').returns(supplierConfig);
             const supplier = new Supplier();
             await supplier.init();
-            let transactionHash = await supplier.transferProduct(product, intermediaryConfig.certificate);
+            let transactionHash = await supplier.transferProduct(product, intermediaryConfig.certificate.entity);
+            let data = await iotaHelper.readTransaction(transactionHash);
+            expect(data.message.op).to.be.equal(Operations.TRANSFER);
             //await iotaHelper.waitUntilConfirmed(transactionHash);
         })
         it('should transfer to end user', async () => {
@@ -137,6 +143,8 @@ describe('@iota-supply-tracer', () => {
             const intermediary = new Supplier();
             await intermediary.init();
             let transactionHash = await intermediary.transferProductToEndUser(product);
+            let data = await iotaHelper.readTransaction(transactionHash);
+            expect(data.message.op).to.be.equal(Operations.TRANSFER_TO_END_USER);
             //await iotaHelper.waitUntilConfirmed(transactionHash);
         })
         it('should confirm product delivery', async () => {

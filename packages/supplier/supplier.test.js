@@ -23,10 +23,10 @@ describe('@iota-supply-tracer/supplier', () => {
     describe('transferProduct', () => {
         it('should transfer product', async () => {
             let prod = await supplier.newProduct();
-            const newOwnerCert = {entity: "whatever", publicKey: "..."};
-            let hash = await supplier.transferProduct(prod, newOwnerCert);
+            const newEntity = 'ZCRDEWLK9WFOFSHXRYU9PDHAFOQHJKJPEVRGEDHMMJGUQDKHNAYJ9CUFFFXKJHCLQJDAGZXJTLPMPYCGA'
+            let hash = await supplier.transferProduct(prod, newEntity);
             let transaction = await iotaHelper.readTransaction(hash);
-            expect(transaction.message.newOwnerCertificate).to.deep.equal(newOwnerCert);
+            expect(transaction.message.newEntity).to.be.equal(newEntity);
         })
     })
     describe('transferProductToEndUser', () => {

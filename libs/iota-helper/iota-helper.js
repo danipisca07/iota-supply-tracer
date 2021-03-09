@@ -104,8 +104,21 @@ const iotaHelper = {
                 
             }, msInterval)
         })
-    }
+    },
 
+    getEntityCertificate : async (entity) => {
+        return new Promise(async (resolve,reject) => {
+            try {
+                let hashes = await iotaHelper.api.findTransactions({addresses: [entity]});
+                let transactions = await iotaHelper.readTransactions(hashes);
+                let ordered = transactions.sort((a,b) => a.timestamp - b.timestamp);
+                const last = ordered[ordered.length-1];
+                resolve(last.message.certificate);
+            }catch (err){
+                reject(err);
+            }
+        })
+    },
 
 }
 

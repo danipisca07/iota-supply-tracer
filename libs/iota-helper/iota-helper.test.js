@@ -48,6 +48,16 @@ describe('@iota-supply-tracer/iota-helper', () => {
             expect(confirmed).to.be.false;
         })
     })
+
+    describe('getEntityCertificate', () => {
+        it('should return certificate', async () => {
+            const entity = 'ZCRDEWLK9WFOFSHXRYU9PDHAFOQHJKJPEVRGEDHMMJGUQDKHNAYJ9CUFFFXKJHCLQJDAGZXJTLPMPYCGA';
+            //const entity = 'WOTDVQTNXREFWYCJNAUTFGHBBETP9E9THMBGJTJV9MHQOWACNELYKLOTFADMKRMETCXEWTSGDIIEGEDNKSWTKJRTLW';
+            let certificate = await iotaHelper.getEntityCertificate(entity);
+            expect(certificate.name).to.be.equal('Producer');
+        })
+    })
+
     describe('waitUntilConfirmed', () => {
         it('should timeout to false before confirmation', async () => {
             let trytes = await iotaHelper.api.prepareTransfers(iotaHelper.generateSeed(), transfers);
@@ -61,4 +71,5 @@ describe('@iota-supply-tracer/iota-helper', () => {
             expect(time).to.be.not.null;
         })
     })
+    
 });

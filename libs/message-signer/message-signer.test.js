@@ -132,7 +132,7 @@ describe('message-signer', () => {
             }
             MessageSigner.signPayload(payload, privateKey);
             
-            const ok = MessageSigner.verifyPayload(payload);
+            const ok = MessageSigner.verifyPayload(payload, certificate);
             expect(ok).to.be.true;
         })
     })

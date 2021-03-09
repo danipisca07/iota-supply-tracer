@@ -41,10 +41,10 @@ const MessageSigner = {
         payload.signature = signature;
     },
 
-    verifyPayload: (payload) => {
+    verifyPayload: (payload, certificate) => {
         const body = lodash.cloneDeep(payload);
         delete body.signature;
-        return MessageSigner.verify(JSON.stringify(body), payload.signature, payload.certificate.publicKey);
+        return MessageSigner.verify(JSON.stringify(body), payload.signature, certificate.publicKey);
     }
 };
 

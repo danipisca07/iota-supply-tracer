@@ -148,18 +148,13 @@ describe('@iota-supply-tracer', () => {
             //await iotaHelper.waitUntilConfirmed(transactionHash);
         })
         it('should confirm product delivery', async () => {
-            //Product delivery confirmation
-            //configStub = sinon.stub(Configuration, 'loadConfiguration').returns(intermediaryConfig);
             const user = new User();
-            // const data = await user.getProductData(product);
-            // const ok = await user.verifyProduct(product);
-            // if(ok){
-            //     transactionHash = await user.confirmProduct(product);
-            //     await iotaHelper.waitUntilConfirmed(transactionHash);
-            //     console.log(`Product with id: ${product.id} is confirmed by end user [${transactionHash}]`);
-            // } else {
-            //     console.log(`Product with id: ${product.id} is NOT verified!!`);
-            // }
+            const chain = await user.getSupplyChain(product);
+            const verified = await user.verifyChain(chain);
+            expect(verified).to.be.true;
+            let transactionHash = await user.confirmProduct(product);
+            let data = await iotaHelper.readTransaction(transactionHash);
+            expect(data.message.confirmed).to.be.true;
         })
     })
 });

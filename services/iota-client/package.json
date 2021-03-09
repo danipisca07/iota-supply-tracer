@@ -15,6 +15,7 @@
   "dependencies": {
     "@iota-supply-tracer/configuration": "^0.0.0",
     "@iota-supply-tracer/iota-helper": "^0.0.0",
+    "@iota-supply-tracer/message-signer": "^0.0.0",
     "@iota/converter": "^1.0.0-beta.30",
     "@iota/core": "^1.0.0-beta.30",
     "@iota/extract-json": "^1.0.0-beta.30"

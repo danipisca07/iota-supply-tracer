@@ -1,28 +1,45 @@
 'use strict';
 
 const IotaClient = require('@iota-supply-tracer/iota-client');
+const iotaHelper = require('@iota-supply-tracer/iota-helper');
+const MessageSigner = require('@iota-supply-tracer/message-signer');
+const { Operations } = require('@iota-supply-tracer/constants');
 
 class User {
     constructor() {
         
     }
 
-    async getProductData(product){
+    async getSupplyChain(product){
         return new Promise(async (resolve, reject) => {
             try {
                 const client = new IotaClient(product.seed);
-                const chain = await client.getSupplyChain();
-                resolve(chain);
-            } catch(e) {
+                const messages = await client.getAllMessages();
+                resolve(messages);
+            }catch(e){
                 reject(e);
             }
-        });
+        })
     }
 
-    async verifyProduct(product){
+    async verifyChain(chain){
         return new Promise(async (resolve, reject) => {
             try {
-                //TODO
+                let creation = chain.shift();
+                let currentCert = await iotaHelper.getEntityCertificate(creation.entity);
+                for(let msg of chain){
+                    if(!MessageSigner.verifyPayload(msg, currentCert))
+                        reject(new Error(`Data corrupted! Bundle ${b.hash} cannot be verified!`));
+                    switch(msg.op) {
+                        case Operations.TRANSFER:
+                            currentCert = await iotaHelper.getEntityCertificate(msg.newEntity);
+                            break;
+                        case Operations.TRANSFER_TO_END_USER:
+                        case Operations.UPDATE:
+                        default:
+                            break;
+                    }
+                }
                 resolve(true);
             } catch(e) {
                 reject(e);

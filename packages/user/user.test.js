@@ -4,17 +4,24 @@ const User = require('./user');
 const { expect } = require('chai');
 const iotaHelper = require('@iota-supply-tracer/iota-helper');
 describe('@iota-supply-tracer/user', () => {
-    describe('confirmProduct', () => {
-        it('should verify product', async () => {
+    describe('getSupplyChain', () => {
+        it('should get chain', async () => {
+            const exampleProduct = 'LXEVAFRTN9F9CANJMPZYGEVXNLBWMTV9DKYWFGCTRJHRZCAXFDZNAMKHQMSCAEBPXATZRMRBDDEYFYIRV';
             const user = new User();
-            const product = {
-                id: "JJQUVPSFSBZQTDIXCQAAUTFRBTWWLRNJEVHHQ9BPVNXZRONALLUQSEVTLHIDDLUEUSLA9BLXZYFWZNRDB",
-                seed: "QOBWCRCWKIJUBZEBQTPWVBRCQCDECZRSJXJEOMWYVMJNJSTAIRQFMNEFQRUZCTOEJCDBAHZTNUTBKN9HZ",
-                address: "MKTRLKEWIBADSVELTMVYMJRVULMH9KCLKQDDKVHSEJKKHXGZAIQQIPPLNNFBJFLKHV9NMUGRTWVZ9LRWD",
-                transactionHash: "RTCHHGOLYDNEXTPOKAUR9JUFOCGSXBXOLVJLIGYUHGOKIUB9HWTYCNQUY9VHMYIJFYFNDVK9AODTA9999"
-            };
-            const ok = await user.verifyProduct(product);
+            let supplyChain = await user.getSupplyChain({seed: exampleProduct});
+            expect(supplyChain).to.be.an('array');
         })
+    })
+    describe('verifyChain', () => {
+        it('should verify chain', async () => {
+            const exampleProduct = 'LXEVAFRTN9F9CANJMPZYGEVXNLBWMTV9DKYWFGCTRJHRZCAXFDZNAMKHQMSCAEBPXATZRMRBDDEYFYIRV';
+            const user = new User();
+            let chain = await user.getSupplyChain({seed: exampleProduct});
+            let verified = await user.verifyChain(chain);
+            expect(verified).to.be.true;
+        })
+    })
+    describe('confirmProduct', () => {
         it('should confirm reception of product', async () => {
             const user = new User();
             let mockProd = {

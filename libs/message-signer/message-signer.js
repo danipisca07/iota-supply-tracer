@@ -43,8 +43,9 @@ const MessageSigner = {
 
     verifyPayload: (payload, certificate) => {
         const body = lodash.cloneDeep(payload);
+        const signature = payload.signature instanceof Uint8Array ? payload.signature : new Uint8Array(payload.signature.data);
         delete body.signature;
-        return MessageSigner.verify(JSON.stringify(body), payload.signature, certificate.publicKey);
+        return MessageSigner.verify(JSON.stringify(body), signature, certificate.publicKey);
     }
 };
 

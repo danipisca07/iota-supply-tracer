@@ -1,13 +1,10 @@
 'use strict';
 
-const Configuration = require('@iota-supply-tracer/configuration')
 const Converter = require('@iota/converter');
 const iotaHelper = require('@iota-supply-tracer/iota-helper')
 
 class IotaClient {
     constructor(seed) {
-        if (seed == null)
-            seed = Configuration.seed;
         this._seed = seed;
     }
 
@@ -39,15 +36,15 @@ class IotaClient {
         })
     }
 
-    async getSupplyChain(){
+    async getAllMessages() {
         return new Promise(async (resolve, reject) => {
             try {
                 const data = await this.getAccountData();
                 const bundles = await iotaHelper.api.getBundlesFromAddresses(data.addresses);
                 const messages = bundles.map(b => iotaHelper.extractMessageFromBundle(b));
                 resolve(messages);
-            }catch(e){
-                reject(e);
+            }catch (err){
+                reject(err);
             }
         })
     }

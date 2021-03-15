@@ -9,28 +9,28 @@ const MessageSigner = require('@iota-supply-tracer/message-signer');
 
 class Supplier {
     constructor() {
-        
+
     }
 
-    async init(){
-        return new Promise(async (resolve,reject) => {
+    async init() {
+        return new Promise(async (resolve, reject) => {
             try {
                 this.config = await Configuration.loadConfiguration();
-                if(this.config.seed === null)
+                if (this.config.seed === null)
                     this.config.seed = iotaHelper.generateSeed();
                 this.client = new IotaClient(this.config.seed);
-                if(this.config.privateKey === null )
+                if (this.config.privateKey === null)
                     await this.generateNewKey();
-            } catch(err) {
+            } catch (err) {
                 reject(err);
-            }            
+            }
             resolve();
         })
     }
 
     async newProduct() {
         return new Promise(async (resolve, reject) => {
-            if(!this.config)
+            if (!this.config)
                 reject(new Error("Should call init first!"));
             try {
                 let product = {};
@@ -46,8 +46,8 @@ class Supplier {
                 product.transactionHash = await product.client.newTransaction(product.id, 0, payload);
                 resolve(product);
             }
-            catch(err){
-                reject(err);            
+            catch (err) {
+                reject(err);
             }
         })
     }
@@ -58,9 +58,9 @@ class Supplier {
      * @param {*} newOwnerCertificate Certificate object
      * @returns 
      */
-    async transferProduct(product, newEntity){
+    async transferProduct(product, newEntity) {
         return new Promise(async (resolve, reject) => {
-            if(!this.config)
+            if (!this.config)
                 reject(new Error("Should call init first!"));
             try {
                 const payload = {
@@ -79,16 +79,16 @@ class Supplier {
                     .catch((err) => {
                         reject(err);
                     })
-            }   
-            catch(err){
+            }
+            catch (err) {
                 reject(err);
             }
         })
     }
 
-    async transferProductToEndUser(product){
+    async transferProductToEndUser(product) {
         return new Promise(async (resolve, reject) => {
-            if(!this.config)
+            if (!this.config)
                 reject(new Error("Should call init first!"));
             const payload = {
                 id: product.id,
@@ -110,9 +110,9 @@ class Supplier {
         })
     }
 
-    async updateProduct(product, status){
+    async updateProduct(product, status) {
         return new Promise(async (resolve, reject) => {
-            if(!this.config)
+            if (!this.config)
                 reject(new Error("Should call init first!"));
             const payload = {
                 id: product.id,
@@ -133,7 +133,7 @@ class Supplier {
         })
     }
 
-    async generateNewKey(){
+    async generateNewKey() {
         return new Promise(async (resolve, reject) => {
             const keypair = await MessageSigner.generateKeyPair();
             const newAddr = await this.client.generateAddress();
@@ -141,8 +141,8 @@ class Supplier {
                 name: this.config.name,
                 website: this.config.website,
                 entity: this.config.certificate?.entity != undefined ? this.config.certificate.entity : newAddr,
-                publicKey : keypair.publicKey,
-            }            
+                publicKey: keypair.publicKey,
+            }
             this.client.newTransaction(newAddr, 0, { certificate })
                 .then((hash) => {
                     this.config.privateKey = keypair.privateKey;
@@ -156,7 +156,11 @@ class Supplier {
         });
     }
 
-    
+    getCurrentCertificate() {
+        return this.config.certificate;
+    }
+
+
 }
 
 module.exports = Supplier;

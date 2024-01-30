@@ -1,15 +1,15 @@
 'use strict';
 
 const Supplier = require('./supplier');
+const IotaClient = require('@iota-supply-tracer/iota-client')
 const { expect } = require('chai');
-const iotaHelper = require('@iota-supply-tracer/iota-helper');
 describe('@iota-supply-tracer/supplier', () => {
     describe('newProduct', () => {
         it('should generate new product', async () => {
             const supplier = new Supplier();
             let prod = await supplier.newProduct();
             expect(prod).to.be.not.null;
-            let transaction = await iotaHelper.readTransaction(prod.transactionHash);
+            let transaction = await IotaClient.readTransaction(prod.transactionHash);
             expect(transaction.message.id).to.be.equal(prod.id);
         })
     })
@@ -19,7 +19,7 @@ describe('@iota-supply-tracer/supplier', () => {
             let prod = await supplier.newProduct();
             const newOwnerCert = {subject: "whatever"};
             let hash = await supplier.transferProduct(prod, newOwnerCert);
-            let transaction = await iotaHelper.readTransaction(hash);
+            let transaction = await IotaClient.readTransaction(hash);
             expect(transaction.message.newOwnerCertificate).to.deep.equal(newOwnerCert);
         })
     })
@@ -28,7 +28,7 @@ describe('@iota-supply-tracer/supplier', () => {
             const supplier = new Supplier();
             let prod = await supplier.newProduct();
             let hash = await supplier.transferProductToEndUser(prod);
-            let transaction = await iotaHelper.readTransaction(hash);
+            let transaction = await IotaClient.readTransaction(hash);
             expect(transaction.message.delivered).to.be.true;
             expect(transaction.message.confirmed).to.be.false;
         })
@@ -39,7 +39,7 @@ describe('@iota-supply-tracer/supplier', () => {
             let prod = await supplier.newProduct();
             let status = { phase: 'delivery', location: 'Italy'};
             let hash = await supplier.updateProduct(prod, status);
-            let transaction = await iotaHelper.readTransaction(hash);
+            let transaction = await IotaClient.readTransaction(hash);
             expect(transaction.message.status.phase).to.be.equal('delivery');
             expect(transaction.message.status.location).to.be.equal('Italy');
         })

@@ -2,17 +2,17 @@
 
 const User = require('./user');
 const { expect } = require('chai');
-const iotaHelper = require('@iota-supply-tracer/iota-helper');
+const IotaClient = require('@iota-supply-tracer/iota-client');
 describe('@iota-supply-tracer/user', () => {
     describe('confirmProduct', () => {
         it('should confirm reception of product', async () => {
             const user = new User();
             let mockProd = {
                 id: "randomIdOfProductReceived",
-                seed: iotaHelper.generateSeed()
+                seed: IotaClient.generateSeed()
             }
             let hash = await user.confirmProduct(mockProd);
-            let transaction = await iotaHelper.readTransaction(hash);
+            let transaction = await IotaClient.readTransaction(hash);
             expect(transaction.message.id).to.be.equal(mockProd.id);
             expect(transaction.message.confirmed).to.be.true;
         })

@@ -1,6 +1,5 @@
 'use strict';
 
-const iotaHelper = require('@iota-supply-tracer/iota-helper');
 const IotaClient = require('@iota-supply-tracer/iota-client');
 const Configuration = require('@iota-supply-tracer/configuration');
 
@@ -13,7 +12,7 @@ class Supplier {
 
     async newProduct() {
         let product = {};
-        product.seed = iotaHelper.generateSeed();
+        product.seed = IotaClient.generateSeed();
         product.client = new IotaClient(product.seed);
         product.address = await product.client.generateAddress();
         product.id = await this.client.generateAddress(); //TODO: receive Id as param?

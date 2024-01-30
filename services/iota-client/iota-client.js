@@ -1,7 +1,7 @@
 'use strict';
 
 const Configuration = require('@iota-supply-tracer/configuration')
-const iotaHelper = require('./iota-helper');
+const iotaHelper = require('./libs/iota-helper');
 const { Ed25519Seed, Converter } = require('@iota/iota.js');
 const iotajs = require('@iota/iota.js');
 
@@ -66,6 +66,25 @@ class IotaClient {
                     reject(err);
                 });
         })
+    }
+
+    static generateSeed(){
+        return iotaHelper.generateSeed()
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    static readTransaction(txHash){
+        throw "TBI";
+    }
+
+    // eslint-disable-next-line no-unused-vars
+     static verifyTransaction(txHash){
+        throw "TBI";
+    }
+
+     // eslint-disable-next-line no-unused-vars
+     static waitUntilConfirmed(txHash){
+        throw "TBI";
     }
 }
 

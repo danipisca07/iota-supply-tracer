@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@iota-supply-tracer/configuration": "^0.0.0",
-    "@iota-supply-tracer/iota-helper": "^0.0.0",
     "@iota/iota.js": "github:iotaledger/iota.js#chrysalis"
   },
   "devDependencies": {

@@ -38,7 +38,7 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/libs/iota-helper/iota-helper.test.js"
+                "${workspaceFolder}/services/iota-client/libs/iota-helper/iota-helper.test.js"
             ],
             "internalConsoleOptions": "openOnSessionStart",
             "name": "iota-helper tests",

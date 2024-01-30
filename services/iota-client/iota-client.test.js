@@ -1,7 +1,6 @@
 'use strict';
 const { expect } = require('chai');
 const IotaClient = require('./iota-client');
-const iotaHelper = require('@iota-supply-tracer/iota-helper');
 
 describe('@iota-supply-tracer/iota-client', () => {
     describe('getSeed', () => {
@@ -10,7 +9,7 @@ describe('@iota-supply-tracer/iota-client', () => {
             expect(client.getSeed()).to.have.lengthOf(81);
         })
         it('should use seed', () => {
-            let seed = iotaHelper.generateSeed();
+            let seed = IotaClient.generateSeed();
             let client = new IotaClient(seed);
             expect(client.getSeed()).to.be.equal(seed);
         })
@@ -39,9 +38,9 @@ describe('@iota-supply-tracer/iota-client', () => {
             let address = 'HEQLOWORLDHELLOWORLDHELLOWORLDHELLOWORLDHELLOWORLDHELLOWORLDHELLOWORLDHELLOWOR99DMNFAQLWHD';
             let hash = await client.newTransaction(address, 0, { data: "payload test"});
             expect(hash).to.be.not.null;
-            let transaction = await iotaHelper.readTransaction(hash);
+            let transaction = await IotaClient.readTransaction(hash);
             expect(transaction.message.data).to.be.equal("payload test");
-            let verified = await iotaHelper.verifyTransaction(hash);
+            let verified = await IotaClient.verifyTransaction(hash);
             expect(verified).to.be.false;
         })
     })

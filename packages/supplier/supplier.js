@@ -12,90 +12,58 @@ class Supplier {
     }
 
     async newProduct() {
-        return new Promise(async (resolve, reject) => {
-            let product = {};
-            product.seed = iotaHelper.generateSeed();
-            product.client = new IotaClient(product.seed);
-            product.address = await product.client.generateAddress();
-            product.id = await this.client.generateAddress(); //TODO: receive Id as param?
-            const payload = {
-                id: product.id,
-                certificate: this.certificate,
-                signature: this.authenticator.sign(product.id),
-            };
-            this.client.newTransaction(product.address, 0, payload)
-                .then((hash) => {
-                    product.transactionHash = hash;
-                    resolve(product)
-                })
-                .catch((err) => reject(err))
-        })
+        let product = {};
+        product.seed = iotaHelper.generateSeed();
+        product.client = new IotaClient(product.seed);
+        product.address = await product.client.generateAddress();
+        product.id = await this.client.generateAddress(); //TODO: receive Id as param?
+        const payload = {
+            id: product.id,
+            certificate: this.certificate,
+            signature: this.authenticator.sign(product.id),
+        };
+        product.transactionHash = await this.client.newTransaction(product.address, 0, payload)
+        return product
     }
 
     async transferProduct(product, newOwnerCertificate){
-        return new Promise(async (resolve, reject) => {
-            try {
-                const payload = {
-                    id: product.id,
-                    newOwnerCertificate,
-                    certificate: this.certificate,
-                    signature: this.authenticator.sign(product.id),
-                }
-                const productClient = new IotaClient(product.seed);
-                const newAddr = await productClient.generateAddress();
-                const hash = this.client.newTransaction(newAddr, 0, payload)
-                    .then((hash) => {
-                        resolve(hash);
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    })
-            }   
-            catch(err){
-                reject(err);
-            }
-        })
+        const payload = {
+            id: product.id,
+            newOwnerCertificate,
+            certificate: this.certificate,
+            signature: this.authenticator.sign(product.id),
+        };
+        const productClient = new IotaClient(product.seed);
+        const newAddr = await productClient.generateAddress();
+        const hash = await this.client.newTransaction(newAddr, 0, payload);
+        return hash;
     }
 
     async transferProductToEndUser(product){
-        return new Promise(async (resolve, reject) => {
-            const payload = {
-                id: product.id,
-                delivered: true,
-                confirmed: false,
-                certificate: this.certificate,
-                signature: this.authenticator.sign(product.id),
-            }
-            const productClient = new IotaClient(product.seed);
-            const newAddr = await productClient.generateAddress();
-            this.client.newTransaction(newAddr, 0, payload)
-                .then((hash) => {
-                    resolve(hash);
-                })
-                .catch((err) => {
-                    reject(err);
-                })
-        })
+        const payload = {
+            id: product.id,
+            delivered: true,
+            confirmed: false,
+            certificate: this.certificate,
+            signature: this.authenticator.sign(product.id),
+        };
+        const productClient = new IotaClient(product.seed);
+        const newAddr = await productClient.generateAddress();
+        const hash = await this.client.newTransaction(newAddr, 0, payload);
+        return hash;
     }
 
     async updateProduct(product, status){
-        return new Promise(async (resolve, reject) => {
-            const payload = {
-                id: product.id,
-                status,
-                certificate: this.certificate,
-                signature: this.authenticator.sign(product.id),
-            }
-            const productClient = new IotaClient(product.seed);
-            const newAddr = await productClient.generateAddress();
-            this.client.newTransaction(newAddr, 0, payload)
-                .then((hash) => {
-                    resolve(hash);
-                })
-                .catch((err) => {
-                    reject(err);
-                })
-        })
+        const payload = {
+            id: product.id,
+            status,
+            certificate: this.certificate,
+            signature: this.authenticator.sign(product.id),
+        };
+        const productClient = new IotaClient(product.seed);
+        const newAddr = await productClient.generateAddress();
+        const hash = await this.client.newTransaction(newAddr, 0, payload);
+        return hash;
     }
 
     

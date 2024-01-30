@@ -2,7 +2,8 @@
   "name": "iota-supply-tracer",
   "private": true,
   "scripts": {
-    "demo": "node demo.js"
+    "demo": "node demo.js",
+    "lint": "lerna exec -- eslint ."
   },
   "workspaces": [
     "packages/*",
@@ -10,6 +11,7 @@
     "services/*"
   ],
   "devDependencies": {
+    "eslint": "^8.56.0",
     "lerna": "^3.22.1"
   },
   "dependencies": {

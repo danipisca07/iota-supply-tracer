@@ -1,7 +1,7 @@
 'use strict';
 
 const Configuration = require('@iota-supply-tracer/configuration')
-const iotaHelper = require('@iota-supply-tracer/iota-helper');
+const iotaHelper = require('./iota-helper');
 const { Ed25519Seed, Converter } = require('@iota/iota.js');
 const iotajs = require('@iota/iota.js');
 
@@ -43,7 +43,7 @@ class IotaClient {
     }
 
     async newTransaction(address, value = 0, message = null) {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const depth = 3;
             const minimumWeightMagnitude = 9;
             const messageInTrytes = Converter.asciiToTrytes(JSON.stringify(message));
